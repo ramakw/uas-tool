@@ -16,6 +16,21 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`perpustakaan` /*!40100 DEFAULT CHARACTE
 
 USE `perpustakaan`;
 
+/*Table structure for table `admin` */
+
+DROP TABLE IF EXISTS `admin`;
+
+CREATE TABLE `admin` (
+  `id_admin` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `nama_admin` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_admin`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 /*Table structure for table `anggota` */
 
 DROP TABLE IF EXISTS `anggota`;
@@ -23,13 +38,10 @@ DROP TABLE IF EXISTS `anggota`;
 CREATE TABLE `anggota` (
   `id_anggota` varchar(10) NOT NULL,
   `nama` varchar(100) NOT NULL,
-  `alamat` text DEFAULT NULL,
   `no_telp` varchar(15) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id_anggota`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-/*Data for the table `anggota` */
 
 /*Table structure for table `buku` */
 
@@ -42,11 +54,9 @@ CREATE TABLE `buku` (
   `penerbit` varchar(100) DEFAULT NULL,
   `tahun_terbit` year(4) DEFAULT NULL,
   `stok` int(11) DEFAULT NULL,
-  `status` enum('Tersedia','Dipinjam') DEFAULT 'Tersedia',
+  `status` enum('Tersedia','Dipinjam','Tidak Tersedia') DEFAULT 'Tersedia',
   PRIMARY KEY (`id_buku`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-/*Data for the table `buku` */
 
 /*Table structure for table `peminjaman` */
 
@@ -60,13 +70,11 @@ CREATE TABLE `peminjaman` (
   `tanggal_kembali` date DEFAULT NULL,
   `status` enum('Dipinjam','Dikembalikan') DEFAULT 'Dipinjam',
   PRIMARY KEY (`id_peminjaman`),
-  KEY `id_buku` (`id_buku`),
-  KEY `id_anggota` (`id_anggota`),
-  CONSTRAINT `peminjaman_ibfk_1` FOREIGN KEY (`id_buku`) REFERENCES `buku` (`id_buku`),
-  CONSTRAINT `peminjaman_ibfk_2` FOREIGN KEY (`id_anggota`) REFERENCES `anggota` (`id_anggota`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-/*Data for the table `peminjaman` */
+  KEY `peminjaman_ibfk_1` (`id_buku`),
+  KEY `peminjaman_ibfk_2` (`id_anggota`),
+  CONSTRAINT `peminjaman_ibfk_1` FOREIGN KEY (`id_buku`) REFERENCES `buku` (`id_buku`) ON DELETE CASCADE,
+  CONSTRAINT `peminjaman_ibfk_2` FOREIGN KEY (`id_anggota`) REFERENCES `anggota` (`id_anggota`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
